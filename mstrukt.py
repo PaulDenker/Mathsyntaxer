@@ -25,7 +25,7 @@ class Sack:
     def __call__(self, symbol):
         #Кушаем символы и реагируем на стоп-символы.
         if self.ist_gefullt: return
-        if symbol in [' ', '+', '*']:
+        if symbol in ['+', '-', ' ']:
             self.gefullt_flag = True
         else:
             self.inhalt += symbol
@@ -34,13 +34,22 @@ class Sack:
         #Выводим содержимое.
         return self.inhalt
 
+    def selbsuchen(self):
+        if self.eltern:
+            return next((i for i, c in enumerate(self.eltern.kinder) if c is self), None)
+        return None
+
+
 class Kmltp:
     #Умножение без точки.
     def __init__(self, eltern = None):
         self.eltern = eltern
         self.kinder = list()
         self.gefullt_flag = False
-        
+
+    def __call__(self, symbol):
+
+
 
     
     
