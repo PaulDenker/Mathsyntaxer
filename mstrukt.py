@@ -24,11 +24,18 @@ class Sack:
 
     def __call__(self, symbol):
         #Кушаем символы и реагируем на стоп-символы.
-        if self.ist_gefullt: return
-        if symbol in ['+', '-', ' ']:
-            self.gefullt_flag = True
+        if self.ist_gefullt and self.selbsuchen():
+            self.eltern.kinder[self.selbsuchen() + 1](symbol)
         else:
-            self.inhalt += symbol
+            if symbol == ' ' and self.inhalt != '':
+                self.gefullt_flag = True
+                return
+
+    '''
+    Буду рекусивно по цепочке передавать символ, пока он не найдёт свободное место.
+    '''
+
+
 
     def sicht(self):
         #Выводим содержимое.
@@ -40,15 +47,15 @@ class Sack:
         return None
 
 
-class Kmltp:
-    #Умножение без точки.
+class Sum:
     def __init__(self, eltern = None):
         self.eltern = eltern
         self.kinder = list()
+        self.binder = list()
         self.gefullt_flag = False
 
     def __call__(self, symbol):
-
+        pass
 
 
     
