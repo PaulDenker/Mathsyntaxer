@@ -24,41 +24,62 @@ class Sack:
 
     def __call__(self, symbol):
         #Кушаем символы и реагируем на стоп-символы.
-        if self.ist_gefullt and self.selbsuchen():
-            self.eltern.kinder[self.selbsuchen() + 1](symbol)
-        else:
-            if symbol == ' ' and self.inhalt != '':
-                self.gefullt_flag = True
+        if self.ist_gefullt:
+            idx = self.eltern.kindidx(self)
+            self.eltern.kinder[idx+1](symbol)
+            return
+        if not self.ist_gefullt:
+            if symbol == ' ':
+                if self.inhalt != '':
+                    self.gefullt_flag = True
+                    return
+            if symbol in '+-':
+                if self.inhalt != '':
+                    self.gefullt_flag = True
+                    self.eltern.neukind()
+                    self.eltern.neubind(symbol)
+                    return
+            else:
+                self.inhalt += symbol
                 return
+                
 
     '''
     Буду рекусивно по цепочке передавать символ, пока он не найдёт свободное место.
     '''
 
-
-
     def sicht(self):
         #Выводим содержимое.
         return self.inhalt
 
-    def selbsuchen(self):
-        if self.eltern:
-            return next((i for i, c in enumerate(self.eltern.kinder) if c is self), None)
-        return None
 
 
 class Sum:
     def __init__(self, eltern = None):
         self.eltern = eltern
-        self.kinder = list()
+        self.kinder = [Sack(self)]
         self.binder = list()
         self.gefullt_flag = False
 
     def __call__(self, symbol):
-        pass
+        self.kinder[0](symbol)
+        print(self.kinder)
+
+    def neukind(self):
+        self.kinder.append(Sack(self))
+
+    def neubind(self, bindsymbol):
+        self.binder.append(bindsymbol)
+
+    def kindidx(self, kind):
+        return next((i for i, c in enumerate(self.kinder) if c is kind), None)
+
 
 
     
-    
+sum = Sum()
+while True:
+    x = input()
+    sum(x)
 
 
